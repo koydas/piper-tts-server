@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: piper
+  labels:
+    app: piper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: piper
+  template:
+    metadata:
+      labels:
+        app: piper
+    spec:
+      containers:
+        - name: piper
+          # Tag is rewritten to the built commit SHA by the docker-publish
+          # workflow on every push to main.
+          image: ghcr.io/koydas/piper-tts-server:latest
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
