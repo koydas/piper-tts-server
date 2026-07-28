@@ -18,7 +18,7 @@ spec:
         - name: piper
           # Tag is rewritten to the built commit SHA by the docker-publish
           # workflow on every push to main.
-          image: ghcr.io/koydas/piper-tts-server:latest
+          image: ghcr.io/koydas/piper-tts-server:6d79d5b
           ports:
             - containerPort: 8000
           resources:
