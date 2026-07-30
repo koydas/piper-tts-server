@@ -5,6 +5,10 @@ PyPI) exposing text-to-speech as a plain REST endpoint, CPU-only. Built to be ca
 [`ollama-chat`](https://github.com/koydas/ollama-chat)'s vocal mode, the way that app already
 calls Ollama for chat.
 
+See [`docs/architecture.md`](./docs/architecture.md) for diagrams of how this fits together,
+and [`docs/adr/README.md`](./docs/adr/README.md) for the design decisions behind non-obvious
+parts of this repo.
+
 ## API
 
 - `POST /tts` — JSON body `{"text": "..."}`, response is raw `audio/wav` bytes.
@@ -13,7 +17,8 @@ calls Ollama for chat.
 ## Voice
 
 Bundled at build time (baked into the image, no runtime network dependency):
-`fr_FR-siwis-medium` (French).
+`fr_FR-siwis-medium` (French). See
+[ADR-0001](./docs/adr/0001-bake-voice-model-at-build-time.md) for why.
 
 ## Deployment
 
