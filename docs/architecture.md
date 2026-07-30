@@ -3,7 +3,8 @@
 `piper-tts-server` is as small as it looks: one FastAPI process, one endpoint, one voice model
 baked into the image. There's no state, no database, no config beyond the port — the only
 non-obvious decision is *how* the voice model gets into the container, covered in
-[ADR-0001](./adr/0001-bake-voice-model-at-build-time.md).
+[ADR-0001](./adr/0001-bake-voice-model-at-build-time.md). See
+[`deployment.md`](./deployment.md) for the CI/CD pipeline.
 
 ## Components
 
@@ -61,28 +62,6 @@ flowchart LR
 
 See [ADR-0001](./adr/0001-bake-voice-model-at-build-time.md) for why this is baked in at build
 time (a separate Docker build stage) instead of downloaded on pod start or mounted from a PVC.
-
-## Deployment pipeline
-
-```mermaid
-flowchart TD
-    A[git push to main] --> B{Touches only<br/>k8s/**, docs/**, **.md?}
-    B -- yes --> Z[docker-publish workflow<br/>does not run]
-    B -- no --> C[docker-publish.yml:<br/>build image, incl. voice-download stage]
-    C --> D["push ghcr.io/koydas/piper-tts-server:&lt;sha&gt;"]
-    D --> E[workflow commits new tag<br/>into k8s/deployment.yaml]
-    E --> F[push commit to main]
-    F --> G[ArgoCD polls / gets refreshed]
-    G --> H[Applies k8s/ manifests]
-    H --> I[New pod pulls the new tag<br/>old pod terminates]
-```
-
-Same three-step "build → tag-rewrite commit → ArgoCD sync" shape as this app's siblings
-(`homelab-gateway`, `ollama-chat`) — see either of those repos' `docs/architecture.md` for the
-general mechanics (`paths-ignore`, why the tag-rewrite commit doesn't re-trigger itself, and a
-real race between ArgoCD's poll-sync and the tag-rewrite commit that's been hit in practice).
-Unlike those two, this repo has no test suite yet, so nothing currently gates the build beyond
-CI's implicit "did the Docker image build at all."
 
 ## Runtime topology
 

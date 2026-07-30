@@ -30,4 +30,5 @@ onboarding).
 
 On every push to `main` (that isn't docs-only), `.github/workflows/docker-publish.yml` builds
 the image, pushes it to `ghcr.io/koydas/piper-tts-server:<sha>`, and commits the new tag into
-`k8s/deployment.yaml` — that commit is what ArgoCD syncs on.
+`k8s/deployment.yaml` — that commit is what ArgoCD syncs on. See
+[`docs/deployment.md`](./docs/deployment.md) for the diagram.
